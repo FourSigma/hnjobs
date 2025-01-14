@@ -23,7 +23,7 @@ export const thread = dbSchema.table("thread", {
 });
 
 export const job = dbSchema.table("job", {
-    id: bigint({ mode: 'number' }).primaryKey(),
+    id: bigint({ mode: 'number' }),
     thread_id: bigint({ mode: 'number' }).references(() => thread.id),
     user: text("user").notNull(),
     context: text("content").notNull(),
