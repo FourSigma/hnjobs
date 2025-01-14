@@ -23,7 +23,8 @@ export default function Search() {
     }
 
     return (
-        <>
+        <div className="h-screen flex flex-col items-center justify-between gap-3 my-auto">
+            <h1 className="text-4xl font-mono text-center mb-4">Job Search</h1>
             <form onSubmit={handleSubmit} className="flex flex-row gap-2 w-full">
                 <Input
                     type="text"
@@ -34,8 +35,10 @@ export default function Search() {
                 />
                 <Button type="submit">Search</Button>
             </form>
-            <JobResults jobs={jobs} />
-        </>
+            <div className="overflow-y-auto flex-grow">
+                <JobResults jobs={jobs} />
+            </div>
+        </div>
     )
 }
 
@@ -53,8 +56,20 @@ function JobResults({ jobs }: { jobs: HNJobPostData[] }) {
                     <p className="text-sm text-gray-500 mb-2">{job.company.website} | {job.company.contactEmail || "No contact email provided"}</p>
                     <p className="text-gray-600">{job.company.description}</p>
                     <div>
-                        <h3 className="text-md font-medium text-gray-800 mt-4">Roles</h3>
+                        <h3 className="text-md font-medium text-gray-800 mt-4 mb-2">Work Type</h3>
+                        {job.workTypes.join(",")}
+
+                        <h3 className="text-md font-medium text-gray-800 mt-4">Locations</h3>
                         <ul className="list-disc pl-6">
+                            {job.locations.map((location) => (
+                                <li key={location.city} className="text-gray-700">
+                                    {[location.city, location.country].filter(l => !!l).join(",")}
+                                </li>
+                            ))}
+
+                        </ul>
+                        <h3 className="text-md font-medium text-gray-800 mt-4">Roles</h3>
+                        <ul className="list-decimal pl-6">
                             {job.roles.map((role) => (
                                 <li key={role.title} className="text-gray-700">
                                     <a href={role.url || "#"}>{role.title}</a>
