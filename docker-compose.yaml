@@ -1,0 +1,39 @@
+name: hnjobs 
+services:
+  db:
+    image: paradedb/paradedb:latest
+    container_name: db 
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev 
+      POSTGRES_DB: hndb
+      PARADEDB_TELEMETRY: false
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    networks:
+      - backend
+  nextjs:
+    image: ghcr.io/foursigma/hnjobs:latest
+    container_name: nextjs 
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev 
+      args:
+        NODE_ENV: development 
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - backend
+networks:
+  backend:
+volumes:
+  pgdata:
