@@ -1,5 +1,5 @@
 {
-  "id": "ff055c68-d233-45bb-bcab-4a4d299c374f",
+  "id": "a54fcbda-e789-4118-8635-5f1899dd7ab9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -8,11 +8,11 @@
       "name": "job",
       "schema": "hn",
       "columns": {
-        "id": {
-          "name": "id",
+        "comment_id": {
+          "name": "comment_id",
           "type": "bigint",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         },
         "thread_id": {
           "name": "thread_id",
@@ -47,68 +47,16 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "job_thread_id_thread_id_fk": {
-          "name": "job_thread_id_thread_id_fk",
-          "tableFrom": "job",
-          "tableTo": "thread",
-          "schemaTo": "hn",
-          "columnsFrom": [
-            "thread_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
-        "job_thread_id_id_pk": {
-          "name": "job_thread_id_id_pk",
+        "job_thread_id_comment_id_pk": {
+          "name": "job_thread_id_comment_id_pk",
           "columns": [
             "thread_id",
-            "id"
+            "comment_id"
           ]
         }
       },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "hn.thread": {
-      "name": "thread",
-      "schema": "hn",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "bigint",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sync_error": {
-          "name": "sync_error",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "synced_at": {
-          "name": "synced_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

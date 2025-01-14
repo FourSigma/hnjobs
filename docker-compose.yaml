@@ -17,6 +17,8 @@ services:
   nextjs:
     image: ghcr.io/foursigma/hnjobs:latest
     container_name: nextjs 
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     build:
       context: .
       dockerfile: Dockerfile

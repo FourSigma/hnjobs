@@ -3,13 +3,13 @@
 import { searchJobs } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Job } from '@/types/job'
+import { HNJobPostData } from '@/types/job'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function Search() {
     const [query, setQuery] = useState('')
-    const [jobs, setJobs] = useState<Job[]>([])
+    const [jobs, setJobs] = useState<HNJobPostData[]>([])
 
     const router = useRouter()
 
@@ -40,7 +40,7 @@ export default function Search() {
 }
 
 
-function JobResults({ jobs }: { jobs: Job[] }) {
+function JobResults({ jobs }: { jobs: HNJobPostData[] }) {
     if (jobs.length === 0) {
         return <p className="text-center mt-8 text-gray-600">No jobs found. Try a different search.</p>
     }
@@ -48,11 +48,30 @@ function JobResults({ jobs }: { jobs: Job[] }) {
     return (
         <ul className="mt-8 space-y-4 w-4/6">
             {jobs.map((job) => (
-                <li key={job.id} className="bg-white p-4 rounded-lg">
-                    <h2 className="text-xl font-semibold text-gray-800">{job.title}</h2>
-                    <p className="text-gray-600">{job.company}</p>
-                    <p className="text-sm text-gray-500 mt-2">{job.location}</p>
-                    <p className="mt-2 text-gray-700">{job.description}</p>
+                <li key={job.company.name} className="bg-white p-4 rounded-lg">
+                    <h2 className="text-xl font-medium text-gray-800">{job.company.name || "No Name"}</h2>
+                    <p className="text-sm text-gray-500 mb-2">{job.company.website} | {job.company.contactEmail || "No contact email provided"}</p>
+                    <p className="text-gray-600">{job.company.description}</p>
+                    <div>
+                        <h3 className="text-md font-medium text-gray-800 mt-4">Roles</h3>
+                        <ul className="list-disc pl-6">
+                            {job.roles.map((role) => (
+                                <li key={role.title} className="text-gray-700">
+                                    <a href={role.url || "#"}>{role.title}</a>
+                                </li>
+                            ))}
+
+                        </ul>
+
+                        <h3 className="text-md font-medium text-gray-800 mt-4">Skills</h3>
+                        <ul className="list-disc pl-6">
+                            {job.skills.map((skill) => (
+                                <li key={skill} className="text-gray-700">
+                                    {skill}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </li>
             ))}
         </ul>

@@ -1,4 +1,5 @@
 
+import { HNJobPostData } from "@/types/job";
 import {
     bigint,
     jsonb,
@@ -15,23 +16,17 @@ const timestamptz = (colName: string) =>
 
 const dbSchema = pgSchema("hn");
 
-export const thread = dbSchema.table("thread", {
-    id: bigint({ mode: 'number' }).primaryKey(),
-    title: text("title").notNull(),
-    syncError: text("sync_error"),
-    syncedAt: timestamptz("synced_at").notNull(),
-});
-
 export const job = dbSchema.table("job", {
-    id: bigint({ mode: 'number' }),
-    thread_id: bigint({ mode: 'number' }).references(() => thread.id),
+    thread_id: bigint({ mode: 'number' }).notNull(),
+    comment_id: bigint({ mode: 'number' }).notNull(),
     user: text("user").notNull(),
-    context: text("content").notNull(),
-    meta: jsonb("meta").notNull().default("{}"),
+    content: text("content").notNull(),
+    meta: jsonb("meta").notNull().$type<HNJobPostData>(),
     createdAt: timestamptz("created_at").notNull(),
-
 },
     (t) => ([
-        primaryKey({ columns: [t.thread_id, t.id] })
+        primaryKey({ columns: [t.thread_id, t.comment_id] })
     ]),
 );
+
+export type JobSelect = typeof job.$inferSelect;
