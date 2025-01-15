@@ -60,45 +60,45 @@ const QUERY_SYSTEM_PROMPT = `
 ` as const;
 
 const anthropic = createAnthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export async function generateSQLFromSearchQuery(searchQuery: string): Promise<string> {
-    'use server';
+  'use server';
 
-    try {
-        const { text: sqlQuery } = await generateText({
-            system: QUERY_SYSTEM_PROMPT,
-            prompt: `Query: ${searchQuery}`,
-            model: anthropic('claude-3-5-sonnet-20241022'),
-            temperature: 0,
-        });
+  try {
+    const { text: sqlQuery } = await generateText({
+      system: QUERY_SYSTEM_PROMPT,
+      prompt: `Query: ${searchQuery}`,
+      model: anthropic('claude-3-5-sonnet-20241022'),
+      temperature: 0,
+    });
 
-        if (!sqlQuery) {
-            throw new Error('Failed to generate SQL query');
-        }
-        return sqlQuery;
-
-    } catch (error) {
-        console.error("Failed to generate SQL query: ", error);
-        throw new Error("Failed to generate SQL query");
+    if (!sqlQuery) {
+      throw new Error('Failed to generate SQL query');
     }
+    return sqlQuery;
+
+  } catch (error) {
+    console.error("Failed to generate SQL query: ", error);
+    throw new Error("Failed to generate SQL query");
+  }
 
 }
 
 export async function execSQL(sqlQuery: string): Promise<Job[]> {
-    'use server';
+  'use server';
 
-    try {
+  try {
 
-        const result = await db.execute<typeof job.$inferSelect>(sqlQuery);
+    const result = await db.execute<typeof job.$inferSelect>(sqlQuery);
 
-        return result as Job[];
+    return result as Job[];
 
-    } catch (error) {
-        console.error(`Failed to execute SQL query: ${sqlQuery}`, error);
-        throw new Error("Failed to execute SQL query");
-    }
+  } catch (error) {
+    console.error(`Failed to execute SQL query: ${sqlQuery}`, error);
+    throw new Error("Failed to execute SQL query");
+  }
 
 }
 
@@ -243,27 +243,25 @@ ERROR HANDLING:
 Parse the provided job posting and return a JSON object following this exact schema. Maintain strict compliance with the specified data types and field names.
 ` as const;
 
-
-
 export async function extractDataFromHNJobPost(content: string): Promise<HNJobPostData> {
 
-    try {
-        const { object: jobData } = await generateObject({
-            system: EXTRACT_SYTEM_PROMPT,
-            schema: hnJobPostSchema,
-            prompt: `Parse this job post: ${content}`,
-            model: anthropic('claude-3-5-sonnet-20241022'),
-            temperature: 0,
-        });
+  try {
+    const { object: jobData } = await generateObject({
+      system: EXTRACT_SYTEM_PROMPT,
+      schema: hnJobPostSchema,
+      prompt: `Parse this job post: ${content}`,
+      model: anthropic('claude-3-5-sonnet-20241022'),
+      temperature: 0,
+    });
 
-        if (!jobData) {
-            throw new Error('Failed to extract HN job data');
-        }
-        return jobData;
-
-    } catch (error) {
-        console.error("Failed to parse job post: ", error);
-        throw new Error("Failed to parse job post");
+    if (!jobData) {
+      throw new Error('Failed to extract HN job data');
     }
+    return jobData;
+
+  } catch (error) {
+    console.error("Failed to parse job post: ", error);
+    throw new Error("Failed to parse job post");
+  }
 
 }
