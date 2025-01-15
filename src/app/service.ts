@@ -57,6 +57,7 @@ const QUERY_SYSTEM_PROMPT = `
   7. When searching arrays, use the ? operator for exact matches
   8. When searching nested objects, use ->>'field' for text and ->'field' for objects
   9. Always handle NULL values appropriately
+  10. Normalize common variations for skills with correct letting casing (e.g., "React.js" → "React", "Postgres" → "PostgreSQL",  "Typescript" → "TypeScript")
 ` as const;
 
 const anthropic = createAnthropic({
@@ -70,7 +71,7 @@ export async function generateSQLFromSearchQuery(searchQuery: string): Promise<s
     const { text: sqlQuery } = await generateText({
       system: QUERY_SYSTEM_PROMPT,
       prompt: `Query: ${searchQuery}`,
-      model: anthropic('claude-3-5-sonnet-20241022'),
+      model: anthropic('claude-3-5-sonnet-latest'),
       temperature: 0,
     });
 

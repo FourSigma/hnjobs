@@ -67,7 +67,7 @@ function JobResults({ jobs }: { jobs: HNJobPostData[] }) {
 
 
                     <div className="flex flex-row justify-between">
-                        <p className="text-sm text-gray-500 mb-2">{job.company.website} | {job.company.contactEmail || "No contact email provided"}</p>
+                        <p className="text-sm text-gray-500 mb-2">{[job.company.website, job.company.contactEmail].filter(d => !!d).join(" | ")}</p>
                     </div>
                     <p className="text-gray-600">{job.company.description}</p>
                     <div className="flex flex-col gap-2">
@@ -81,16 +81,25 @@ function JobResults({ jobs }: { jobs: HNJobPostData[] }) {
 
                         </ul> */}
                         <div className="mt-4">
-                            <h4 className="text-md font-medium leading-none mb-2">Roles</h4>
+                            <h4 className="text-sm font-semibold leading-none mb-4 text-gray-600">Locations</h4>
+                            <ul className="list-none pl-6">
+                                {job.locations.map((loc) => (
+                                    <li key={loc.city} className="text-sm text-gray-600">
+                                        <Badge variant={"secondary"} className="rounded-lg text-gray-600">
+                                            {loc.city}, {loc.country}
+                                        </Badge>
+                                    </li>
+                                ))}
+
+                            </ul>
+                        </div>
+
+
+                        <div className="mt-2">
+                            <h4 className="text-sm font-semibold leading-none mb-2 text-gray-600">Roles</h4>
                             <ul className="list-none pl-6">
                                 {job.roles.map((role) => (
                                     <li key={role.title} className="text-sm text-gray-600">
-                                        {/* <a href={role.url || '#'} target="_blank" className="inline-flex items-center justify-center text-base p-1 font-medium text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
-                                            <span className="w-full">{role.title}</span>
-                                            <svg className="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                                            </svg>
-                                        </a> */}
                                         <Button asChild variant={"ghost"} size={"sm"} className="text-sm">
                                             <Link href={role.url || '#'} target='_blank'>
 
@@ -110,8 +119,8 @@ function JobResults({ jobs }: { jobs: HNJobPostData[] }) {
 
 
 
-                        <div className="flex flex-row flex-wrap gap-2 mt-2">
-                            {job.skills.map((skill) => <Badge key={skill} variant={"outline"} className="rounded-md text-gray-600">{skill}</Badge>)}
+                        <div className="flex flex-row flex-wrap gap-3 mt-2">
+                            {job.skills.map((skill) => <Badge key={skill} variant={"outline"} className="rounded-lg text-gray-600">{skill}</Badge>)}
                         </div>
                     </div>
                 </li>
